@@ -2,12 +2,11 @@
 
 $(function () {
   var timer = document.getElementById(`timer`);
-  // var level_btn = document.getElementById(`level_btn`);
   var bomb_zan = document.getElementById(`bomb_zan`);
   var W = 12;
   var H = 12;
   var BOMB = 30;
-  var BOMB_fix = 20;
+  var BOMB_fix;
   var cell = [];
   var opened = 0;
   var x_posi;
@@ -66,7 +65,7 @@ $(function () {
     startTime = Date.now();
     $('tbody tr').removeClass('danger');
     var change_img = document.getElementById("change_img");
-    change_img.src = 'img/smile.jpg';
+    change_img.src = 'img/normal.png';
   }
   //初期テーブルの生成
   function initTable() {
