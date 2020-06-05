@@ -50,7 +50,7 @@ $(function () {
     //初期値で配置されたテーブルを削除して、新しい数値で再配置
     tableClash();
     countReset();
-    init();
+    initTable();
   }
 
   //作成したテーブルを全て削除
@@ -65,9 +65,11 @@ $(function () {
     timer.textContent = "00:00";
     startTime = Date.now();
     $('tbody tr').removeClass('danger');
+    var change_img = document.getElementById("change_img");
+    change_img.src = 'img/smile.jpg';
   }
   //初期テーブルの生成
-  function init() {
+  function initTable() {
     var main = document.getElementById("main");
     for (var i = 0; i < H; i++) {
       cell[i] = [];
@@ -102,24 +104,7 @@ $(function () {
       }
     }
   }
-
-  //飛行機アイテムの配置
-  // function set_plane() {
-  //   for (var i = 0; i < 2; i++) {
-  //     while (true) {
-  //       var x = Math.floor(Math.random() * W);
-  //       var y = Math.floor(Math.random() * H);
-  //       //爆弾が配置されていない、最初に選択したセル以外
-  //       if (!cell[x][y].bomb && x_posi != y && y_posi != x) {
-  //         cell[x][y].plane = true;
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
   //周囲の爆弾の数をカウント
-  
   function countBomb(x, y) {
     var B = 0;
     for (var j = y - 1; j <= y + 1; j++) {
@@ -131,7 +116,6 @@ $(function () {
     }
     return B;
   }
-
   //周囲のフラグの数をカウント
   function countFlag(x, y) {
     var F = 0;
@@ -144,7 +128,6 @@ $(function () {
     }
     return F;
   }
-
   //タイマー表示
   function countUp() {
     //現在の時間-最初に取得した時間=経過した時間
@@ -156,9 +139,8 @@ $(function () {
       countUp();
     }, 1000);
   }
-
   //旗を立てる
-  function flag(x, y) {
+  function raiseFlag(x, y) {
     bomb_check = cell[y][x];
     console.log(bomb_check);
     //既に開いているセルなら処理をせず返す
@@ -186,7 +168,7 @@ $(function () {
   }
 
   //クリックされたセルを開く
-  function open(x, y) {
+  function openCell(x, y) {
     open_check = cell[y][x];
     bomb_cnt = countBomb(x, y);
     //既に開いているセルor旗が立っている場合は処理をせず返す
@@ -201,84 +183,31 @@ $(function () {
       //爆弾の数が1以上のセルはそのセルだけの処理
     } else if (bomb_cnt != 0) {
       flip(open_check);
-      if (open_check.plane) {
-        plane_cnt += 1;
-        plane_item.textContent = plane_cnt + "個";
-        if (plane_cnt == 1) {
-          $('tbody tr').addClass('danger');
-        }
-        //それぞれの数字に対してclassを付与してHTMLに追記
-        if (bomb_cnt == 1) {
-          $(open_check).html('<span class="one plane">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 2) {
-          $(open_check).html('<span class="two plane">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 3) {
-          $(open_check).html('<span class="three plane">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 4) {
-          $(open_check).html('<span class="four plane">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 5) {
-          $(open_check).html('<span class="five plane">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 6) {
-          $(open_check).html('<span class="six plane">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 7) {
-          $(open_check).html('<span class="seven plane">' + bomb_cnt + '</span>');
-        } else {
-          $(open_check).html('<span class="eight plane">' + bomb_cnt + '</span>');
-        }
+      //それぞれの数字に対してclassを付与してHTMLに追記
+      if (bomb_cnt == 1) {
+        $(open_check).html('<span class="one">' + bomb_cnt + '</span>');
+      } else if (bomb_cnt == 2) {
+        $(open_check).html('<span class="two">' + bomb_cnt + '</span>');
+      } else if (bomb_cnt == 3) {
+        $(open_check).html('<span class="three">' + bomb_cnt + '</span>');
+      } else if (bomb_cnt == 4) {
+        $(open_check).html('<span class="four">' + bomb_cnt + '</span>');
+      } else if (bomb_cnt == 5) {
+        $(open_check).html('<span class="five">' + bomb_cnt + '</span>');
+      } else if (bomb_cnt == 6) {
+        $(open_check).html('<span class="six">' + bomb_cnt + '</span>');
+      } else if (bomb_cnt == 7) {
+        $(open_check).html('<span class="seven">' + bomb_cnt + '</span>');
       } else {
-        //それぞれの数字に対してclassを付与してHTMLに追記
-        if (bomb_cnt == 1) {
-          $(open_check).html('<span class="one">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 2) {
-          $(open_check).html('<span class="two">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 3) {
-          $(open_check).html('<span class="three">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 4) {
-          $(open_check).html('<span class="four">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 5) {
-          $(open_check).html('<span class="five">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 6) {
-          $(open_check).html('<span class="six">' + bomb_cnt + '</span>');
-        } else if (bomb_cnt == 7) {
-          $(open_check).html('<span class="seven">' + bomb_cnt + '</span>');
-        } else {
-          $(open_check).html('<span class="eight">' + bomb_cnt + '</span>');
-        }
+        $(open_check).html('<span class="eight">' + bomb_cnt + '</span>');
       }
-      //爆弾が周囲に無い場合はfree_openへ
+    //爆弾が周囲に無い場合はfree_openへ
     } else {
       freeOpen(x_posi, y_posi);
     }
   }
 
-  // var z = 0;
-  // var tryx = 0;
-  // //飛行機攻撃したときの挙動
-  // function random_pannel() {
-  //   plane_cnt -= 1;
-  //   plane_item.textContent = plane_cnt + "個";
-  //   if (plane_cnt == 0) {
-  //     $('tbody tr').removeClass('danger');
-  //   }
-  //   for (var i = 0; i < 3; i++) {
-  //     while (true) {
-  //       var x = Math.floor(Math.random() * W);
-  //       var y = Math.floor(Math.random() * H);
-  //       bomb_cnt = countBomb
-  //   (x, y);
-  //       tryx += 1;
-  //       //爆弾が配置されていない、最初に選択したセル以外
-  //       if (!cell[y][x].bomb && !cell[y][x].opened && !cell[y][x].flag && bomb_cnt != 0) {
-  //         break;
-  //       }
-  //     }
-  //     z = z + 1;
-  //     open(x, y);
-  //   }
-  // }
-
   //8方向のセルを連続して開く
-  
   function freeOpen(x, y) {
     for (var j = y - 1; j <= y + 1; j++) {
       for (var i = x - 1; i <= x + 1; i++) {
@@ -292,30 +221,8 @@ $(function () {
           var n = countBomb(i, j);
           if (n == 0) {
             freeOpen(i, j);
-          } else if (c.plane) {
-            plane_cnt += 1;
-            plane_item.textContent = plane_cnt + "個";
-            if (plane_cnt == 1) {
-              $('tbody tr').addClass('danger');
-            }
-            if (n == 1) {
-              $(c).html('<span class="one plane">' + n + '</span>');
-            } else if (n == 2) {
-              $(c).html('<span class="two plane">' + n + '</span>');
-            } else if (n == 3) {
-              $(c).html('<span class="three plane">' + n + '</span>');
-            } else if (n == 4) {
-              $(c).html('<span class="four plane">' + n + '</span>');
-            } else if (n == 5) {
-              $(c).html('<span class="five plane">' + n + '</span>');
-            } else if (n == 6) {
-              $(c).html('<span class="six plane">' + n + '</span>');
-            } else if (n == 7) {
-              $(c).html('<span class="seven plane">' + n + '</span>');
-            } else {
-              $(c).html('<span class="eight plane">' + n + '</span>');
-            }
-          } else {
+          } 
+          else {
             if (n == 1) {
               $(c).html('<span class="one">' + n + '</span>');
             } else if (n == 2) {
@@ -338,7 +245,6 @@ $(function () {
       }
     }
   }
-
   //セルを開く際に行う処理
   function flip(cell) {
     cell.className = "cell open";
@@ -348,20 +254,9 @@ $(function () {
     if (++opened >= (W * H - BOMB_fix)) {
       clearTimeout(timeoutId);
       ending = 1;
-      clearMessage();
+      var change_img = document.getElementById("change_img");
+      change_img.src = 'img/clearsmile.png';
     }
-  }
-  function clearMessage() {
-    $('#result').show();
-  }
-  function badMessage() {
-    $('#bad_result').show();
-  }
-  function clearMessage_sage() {
-    $('#result').hide();
-  }
-  function badMessage_sage() {
-    $('#bad_result').hide();
   }
   //テーブル内では右クリックメニュー非表示
   $(function () {
@@ -374,7 +269,7 @@ $(function () {
     var src = e.currentTarget;
     x_posi = src.x;
     y_posi = src.y;
-    flag(x_posi, y_posi);
+    raiseFlag(x_posi, y_posi);
   }
   //ダブルクリック時の操作
   function doubleClick(e) {
@@ -403,10 +298,11 @@ $(function () {
               }
               clearTimeout(timeoutId);
               ending = 1;
-              badMessage();
               var bomb_img = document.createElement("img");
               bomb_img.src = 'img/bomb.png';
               td.appendChild(bomb_img);
+              var change_img = document.getElementById("change_img");
+              change_img.src = 'img/explosionface.png';
             }
           })
         });
@@ -414,27 +310,36 @@ $(function () {
         //最初の1回目をクリックしたらそこ以外に爆弾配置
         if (bomb_first_set == 0) {
           setBomb();
-          // set_plane();
           startTime = Date.now();
           countUp();
         }
-        open(x_posi, y_posi);
+        openCell(x_posi, y_posi);
         bomb_first_set += 1;
       }
     } else {
       var src = e.currentTarget;
       x_posi = src.x;
       y_posi = src.y;
-      flag(x_posi, y_posi);
+      raiseFlag(x_posi, y_posi);
     }
   }
   //難易度選択した際のイベント
   $('#level_btn').click(function () {
     levelChange();
+    timer.textContent = "00:00";
   });
-  //ニコちゃんを選択した際のイベント
+  //smileを選択した際のイベント
   $('#restart_btn').click(function () {
     levelChange();
+    timer.textContent = "00:00";
+  });
+  $('#restartone').click(function () {
+    levelChange();
+    timer.textContent = "00:00";
+  });
+  $('#restarttwo').click(function () {
+    levelChange();
+    timer.textContent = "00:00";
   });
   //フラグモードに切り替え
   $('#flag_mode_choice').click(function () {
@@ -448,22 +353,8 @@ $(function () {
         break
     }
   });
-  $('#restartone').click(function () {
-    clearMessage_sage();
-    levelChange();
-  });
-  $('#plane').click(function () {
-    if (plane_cnt == 0) {
-      return;
-    }
-    random_pannel();
-  });
-  $('#restarttwo').click(function () {
-    badMessage_sage();
-    levelChange();
-  });
   //最初に必ず実行。初期配置
   window.addEventListener('DOMContentLoaded', function () {
-    init();
+    initTable();
   })
 });
