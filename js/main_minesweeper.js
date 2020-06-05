@@ -2,11 +2,11 @@
 
 $(function () {
   var timer = document.getElementById(`timer`);
-  var level_btn = document.getElementById(`level_btn`);
+  // var level_btn = document.getElementById(`level_btn`);
   var bomb_zan = document.getElementById(`bomb_zan`);
   var W = 12;
   var H = 12;
-  var BOMB = 20;
+  var BOMB = 30;
   var BOMB_fix = 20;
   var cell = [];
   var opened = 0;
@@ -32,19 +32,19 @@ $(function () {
       }
     }
     if (difficulty == "low") {
-      W = 12;
-      H = 12;
+      W = 9;
+      H = 9;
       BOMB = 15;
       BOMB_fix = BOMB;
     } else if (difficulty == "middle") {
       W = 12;
       H = 12;
-      BOMB = 20;
+      BOMB = 30;
       BOMB_fix = BOMB;
     } else {
-      W = 12;
-      H = 12;
-      BOMB = 30;
+      W = 15;
+      H = 15;
+      BOMB = 60;
       BOMB_fix = BOMB;
     }
     //初期値で配置されたテーブルを削除して、新しい数値で再配置
