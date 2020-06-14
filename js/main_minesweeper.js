@@ -2,7 +2,7 @@
 
 $(function () {
   var timer = document.getElementById(`timer`);
-  var bomb_zan = document.getElementById(`bomb_zan`);
+  var bomb_remain = document.getElementById(`bomb_remain`);
   var W = 12;
   var H = 12;
   var BOMB = 30;
@@ -15,8 +15,8 @@ $(function () {
   var bomb_check;
   var bomb_cnt;
   var bomb_first_set = 0;
-  var startTime = 0;
-  var timeoutId;
+  var start_time = 0;
+  var timeout_id;
   var ending = 0;
   var flag_mode = 0;
 
@@ -62,7 +62,7 @@ $(function () {
     ending = 0;
     opened = 0;
     timer.textContent = "00:00";
-    startTime = Date.now();
+    start_time = Date.now();
     $('tbody tr').removeClass('danger');
     var change_img = document.getElementById("change_img");
     change_img.src = 'img/normal.png';
@@ -86,7 +86,7 @@ $(function () {
       }
       main.appendChild(tr);
     }
-    bomb_zan.textContent = BOMB;
+    bomb_remain.textContent = BOMB;
   }
 
   //爆弾をランダムに配置
@@ -130,11 +130,11 @@ $(function () {
   //タイマー表示
   function countUp() {
     //現在の時間-最初に取得した時間=経過した時間
-    const T = new Date(Date.now() - startTime);
+    const T = new Date(Date.now() - start_time);
     let minutes = T.getMinutes();
     let second = T.getSeconds();
     timer.textContent = `${String(minutes).padStart(2, `0`)}:${String(second).padStart(2, `0`)}`;
-    timeoutId = setTimeout(() => {
+    timeout_id = setTimeout(() => {
       countUp();
     }, 1000);
   }
@@ -151,7 +151,7 @@ $(function () {
       $(bomb_check).children().remove();
       cell[y][x].flag = false;
       BOMB += 1;
-      bomb_zan.textContent = BOMB;
+      bomb_remain.textContent = BOMB;
       //旗を立てる
     } else {
       var td = document.createElement("td");
@@ -162,7 +162,7 @@ $(function () {
       $(bomb_check).addClass('flag');
       cell[y][x].flag = true;
       BOMB -= 1;
-      bomb_zan.textContent = BOMB;
+      bomb_remain.textContent = BOMB;
     }
   }
 
@@ -181,7 +181,7 @@ $(function () {
       return;
       //爆弾の数が1以上のセルはそのセルだけの処理
     } else if (bomb_cnt != 0) {
-      flip(open_check);
+      allClear(open_check);
       //それぞれの数字に対してclassを付与してHTMLに追記
       if (bomb_cnt == 1) {
         $(open_check).html('<span class="one">' + bomb_cnt + '</span>');
@@ -216,7 +216,7 @@ $(function () {
           if (c.opened || c.bomb || c.flag) {
             continue;
           }
-          flip(c);
+          allClear(c);
           var n = countBomb(i, j);
           if (n == 0) {
             freeOpen(i, j);
@@ -245,13 +245,13 @@ $(function () {
     }
   }
   //セルを開く際に行う処理
-  function flip(cell) {
+  function allClear(cell) {
     cell.className = "cell open";
     cell.opened = true;
     console.log(opened + "," + W + "," + H + "," + BOMB_fix);
     //クリアー
     if (++opened >= (W * H - BOMB_fix)) {
-      clearTimeout(timeoutId);
+      clearTimeout(timeout_id);
       ending = 1;
       var change_img = document.getElementById("change_img");
       change_img.src = 'img/clearsmile.png';
@@ -295,7 +295,7 @@ $(function () {
                 $(td).removeClass('flag');
                 $(td).children().remove();
               }
-              clearTimeout(timeoutId);
+              clearTimeout(timeout_id);
               ending = 1;
               var bomb_img = document.createElement("img");
               bomb_img.src = 'img/bomb.png';
@@ -309,7 +309,7 @@ $(function () {
         //最初の1回目をクリックしたらそこ以外に爆弾配置
         if (bomb_first_set == 0) {
           setBomb();
-          startTime = Date.now();
+          start_time = Date.now();
           countUp();
         }
         openCell(x_posi, y_posi);
